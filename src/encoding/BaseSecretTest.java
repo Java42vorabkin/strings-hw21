@@ -33,14 +33,22 @@ class BaseSecretTest {
 
 	@Test
 	void testToSecretString() {
-		bs.setSecret(".-"); 
+		String secret = ".-";
+		int validCode = bs.setSecret(secret); 
+		if(validCode<0) {
+			fail("input isn't valid. secret="+secret+" code="+validCode);
+		}
 		assertEquals("-..", bs.toSecretString(4));
 		
 	}
 
 	@Test
 	void testMatches() {
-		bs.setSecret("()");
+		String secret = "()";
+		int validCode = bs.setSecret(secret); 
+		if(validCode<0) {
+			fail("input isn't valid. secret="+secret+" code="+validCode);
+		}
 		assertTrue(bs.matches(")((", "4"));
 	}
 
