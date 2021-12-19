@@ -23,45 +23,50 @@ public BaseSecret() {
 	secret = "0123456789";
 }
 public static String toBinaryString(int num) {
-	return toBaseString(num, 2);
+	return toBaseString(num, "01");
 }
 public static String toDecimalString(int num) {
-	return toBaseString(num, 10);
+	return toBaseString(num, "0123456789");
 }
-public static String toBaseString(int num, int base) {
+public static String toBaseString(int num, String secret) {
 	StringBuilder builder = new StringBuilder();
+	int base = secret.length();
 	do {
 		int rem = num % base;
-		builder.insert(0, rem);
+		builder.insert(0, secret.charAt(rem));
 		num = num / base;
 		
 	}while(num != 0);
 	return builder.toString();
 }
 // The first edition
-public static int parseIntBase2(String baseStr, int base) {
+public static int parseIntBase2(String baseStr, String secret) {
+	int base = secret.length();
 	int res = 0;
 	int length = baseStr.length();
 	for (int i = 0; i < length; i++) {
-		res = res * base + (baseStr.charAt(i) - '0');
+		int value = secret.indexOf(baseStr.charAt(i));
+		res = res * base + value;
 	}
 	return res;
 }
 // The second edition
-public static int parseIntBase(String baseStr, int base) {
+public static int parseIntBase(String baseStr, String secret) {
+	int base = secret.length();
 	int res = 0;
 	int length = baseStr.length();
 	for (int i = 0; i < length; i++) {
-		res = res + (int)Math.pow(base, length-i-1) * (baseStr.charAt(i) - '0');
+		int value = secret.indexOf(baseStr.charAt(i));
+		res = res + (int)Math.pow(base, length-i-1) * value;
 	}
 	return res;
 }
 
 public static int parseIntBinary(String binaryStr) {
-	return parseIntBase(binaryStr, 2);
+	return parseIntBase(binaryStr, "01");
 }
 public static int parseIntDecimal(String decString) {
-	return parseIntBase(decString, 10);
+	return parseIntBase(decString, "0123456789");
 }
 
 private int secretValidationCode(String secret) {
@@ -82,11 +87,11 @@ public String toSecretString(int num) {
 	if(secret == null) {
 		return "setSecret() isn't called";
 	}
-	String baseString = toBaseString(num, secret.length());
+	String baseString = toBaseString(num, secret);
 	char[] charArray = baseString.toCharArray();
 	StringBuilder builder = new StringBuilder();
 	for(char ch : charArray) {
-		builder.append(secret.charAt(ch-'0'));
+		builder.append(ch);
 	}
 	
 	return builder.toString();
@@ -97,9 +102,9 @@ public boolean matches(String code, String decString) {
 	if(secret == null) {
 		return false;
 	}
-//	int number = parseIntBase(decString, secret.length());
-//	String strNumber = toSecretString(number);
-	return code.equals(toSecretString(parseIntBase(decString, secret.length())));
+	int number = parseIntBase(decString, "0123456789");
+	String strNumber = toSecretString(number);
+	return code.equals(strNumber);
 	//Done
 }
 

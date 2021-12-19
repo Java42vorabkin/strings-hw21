@@ -39,6 +39,8 @@ class BaseSecretTest {
 			fail("input isn't valid. secret="+secret+" code="+validCode);
 		}
 		assertEquals("-..", bs.toSecretString(4));
+		bs.setSecret("0123456789abcdef");
+		assertEquals("11", bs.toSecretString(17));
 		
 	}
 
@@ -50,6 +52,8 @@ class BaseSecretTest {
 			fail("input isn't valid. secret="+secret+" code="+validCode);
 		}
 		assertTrue(bs.matches(")((", "4"));
+		bs.setSecret("0123456789abcdef");
+		assertTrue(bs.matches("13", "19"));
 	}
 
 }
